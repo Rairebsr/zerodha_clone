@@ -7,8 +7,8 @@ import { features } from './Features'
 const NavBar = () => {
     const [open,setOpen] = useState(false)
   return (
-    <div>
-      <div className='flex items-center justify-between py-2 px-6 '>
+    <div className='sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b py-4 shadow-md'>
+      <div className='flex items-center justify-between py-3 px-6 max-w-7xl mx-auto'>
         <Link to='/'><img src={assets.logo} className='w-40' alt='logo'/></Link>
         
         <ul className='hidden sm:flex gap-10 text-m text-gray-700'>
@@ -36,48 +36,47 @@ const NavBar = () => {
             <div className='relative'>
                 <img onClick={()=>setOpen(!open)} className='w-6 h-6 cursor-pointer' src={assets.drop_icon} alt="" />
                 {open && (
-                    <div className='absolute top-10 right-0 w-80 bg-white shadow-xl border rounded-lg z-50 p-4 space-y-4'>
-                        {/*top section */}
-                        <div className="grid grid-cols-2 gap-4">
-                            
-                            {features.map((item, index) => (
-                                <div key={index} className="flex flex-col items-center text-center">
-                                    <img src={item.icon} alt={item.title} className="w-8 h-8 mb-2" />
-                                    <h3 className="font-semibold text-sm">{item.title}</h3>
-                                    <p className="text-xs text-gray-500">{item.description}</p>
-                                </div>
-                                ))}
-                            
+                    <div className='absolute top-10 right-0 w-[28rem] bg-white shadow-xl border rounded-lg z-50 p-4 space-y-4'>
+                    {/* top section - horizontal arrangement without scrolling */}
+                    <div className="flex flex-wrap justify-between gap-4">
+                        {features.map((item, index) => (
+                            <div key={index} className="flex flex-col items-center text-center w-[6.5rem]">
+                                <img src={item.icon} alt={item.title} className="w-8 h-8 mb-2" />
+                                <h3 className="font-semibold text-sm">{item.title}</h3>
+                                <p className="text-xs text-gray-500 line-clamp-2">{item.description}</p>
+                            </div>
+                        ))}
+                    </div>
+                    
+                    <hr />
+                    
+                    {/* bottom section */}
+                    <div className='flex justify-between bg-gray-100 p-4 rounded-lg'>
+                        <div className="space-y-1">
+                            <h4 className="font-semibold text-sm">Utilities</h4>
+                            <a href="/calculator" className="text-xs text-blue-500 block">Calculator</a>
+                            <a href="/Brokerage" className="text-xs text-blue-500 block">Brokerage Calculator</a>
+                            <a href="/Margin" className="text-xs text-blue-500 block">Margin Calculator</a>
+                            <a href="/sip" className="text-xs text-blue-500 block">SIP Calculator</a>
                         </div>
-                        <hr />
-                        {/*bottom section */}
-                        <div className='flex justify-between'>
-                            <div className="space-y-1">
-                                <h4 className="font-semibold text-sm">Utilities</h4>
-                                <a href="/calculator" className="text-xs text-blue-500 block">Calculator</a>
-                                <a href="/Brokerage" className="text-xs text-blue-500 block">Brokerage Calculator</a>
-                                <a href="/Margin" className="text-xs text-blue-500 block">Margin Calculator</a>
-                                <a href="/sip" className="text-xs text-blue-500 block">SIP Calculator</a>
 
-                            </div>
-
-                            {/* Second Heading with Links */}
-                            <div className="space-y-1">
-                                <h4 className="font-semibold text-sm">Updates</h4>
-                                <a href="/z-connect" className="text-xs text-blue-500 block">Z-connect Blog</a>
-                                <a href="/cic-Bull" className="text-xs text-blue-500 block">Circulars/Bulletins</a>
-                                <a href="/ipo" className="text-xs text-blue-500 block">IPOs</a>
-                                <a href="/market" className="text-xs text-blue-500 block">Markets</a>
-                            </div>
-                            <div className="space-y-1">
-                                <h4 className="font-semibold text-sm">Education</h4>
-                                <div className="flex gap-3 mt-1">
-                                    <img src={assets.varsity} alt="tool1" className="w-5 h-5" />
-                                    <img src={assets.trade_qa} alt="tool2" className="w-5 h-5" />
-                                </div>
+                        <div className="space-y-1">
+                            <h4 className="font-semibold text-sm">Updates</h4>
+                            <a href="/z-connect" className="text-xs text-blue-500 block">Z-connect Blog</a>
+                            <a href="/cic-Bull" className="text-xs text-blue-500 block">Circulars/Bulletins</a>
+                            <a href="/ipo" className="text-xs text-blue-500 block">IPOs</a>
+                            <a href="/market" className="text-xs text-blue-500 block">Markets</a>
+                        </div>
+                        
+                        <div className="space-y-1">
+                            <h4 className="font-semibold text-sm">Education</h4>
+                            <div className="flex gap-3 mt-1">
+                                <img src={assets.varsity} alt="tool1" className="w-10 " />
+                                <img src={assets.trade_qa} alt="tool2" className="w-10 " />
                             </div>
                         </div>
                     </div>
+                </div>
                 )}
             </div>
         </ul>
