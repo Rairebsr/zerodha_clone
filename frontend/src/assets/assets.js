@@ -17,6 +17,15 @@ import p_kite from './product_kite.png'
 import p_kite_c from './product_kiteconnect.png'
 import p_varsity from './product_varsity.png'
 import press from './press-logos.png'
+import google_badge from './google-play-badge.svg'
+import appstore_badge from './appstore-badge.svg'
+import ditto from './ditto-logo.png'
+import sensibull from './sensibull-logo.svg'
+import smallcase from './smallcase-logo.png'
+import streak from './streak-logo.png'
+import tijori from './tijori.svg'
+import zerodha from './zerodhafundhouse.png'
+import search from './search.png'
 
 
 export const assets = {
@@ -38,5 +47,14 @@ export const assets = {
     p_kite,
     p_kite_c,
     p_varsity,
-    press
+    press,
+    google_badge,
+    appstore_badge,
+    ditto,
+    sensibull,
+    smallcase,
+    streak,
+    tijori,
+    zerodha,
+    search
 }
