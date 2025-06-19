@@ -1,19 +1,21 @@
 import React from 'react';
 import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube, FaWhatsapp, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
+import React from 'react';
+import { FaFacebookF, FaInstagram, FaLinkedinIn, FaYoutube, FaWhatsapp, FaTelegramPlane, FaTwitter } from 'react-icons/fa';
 
 const Footer = () => {
   return (
     <footer className="bg-gray-100 text-gray-700 px-8 py-12">
       <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-5 gap-8">
-        
+        {/* Zerodha Logo & Social Icons */}
         <div className="space-y-4">
           <div className="flex items-center space-x-2">
-            
+            {/* Zerodha logo (replace src with your local logo later) */}
             <img src="https://zerodha.com/static/images/logo.svg" alt="Zerodha" className="h-6" />
           </div>
           <p className="text-sm text-gray-600">© 2010 - 2025, Zerodha Broking Ltd.<br />All rights reserved.</p>
 
-          
+          {/* Social Icons */}
           <div className="flex space-x-4 mt-4 text-xl">
             <a href="/" className="hover:text-blue-500"><FaTwitter /></a>
             <a href="/" className="hover:text-blue-500"><FaFacebookF /></a>
@@ -21,13 +23,15 @@ const Footer = () => {
             <a href="/" className="hover:text-blue-500"><FaLinkedinIn /></a>
           </div>
 
-          
+          {/* Additional Social Icons */}
           <div className="flex space-x-4 mt-4 text-xl">
             <a href="/" className="hover:text-blue-500"><FaYoutube /></a>
             <a href="/" className="hover:text-green-500"><FaWhatsapp /></a>
             <a href="/" className="hover:text-blue-500"><FaTelegramPlane /></a>
           </div>
         </div>
+
+        {/* Account */}
         <div>
           <h2 className="font-bold mb-4">Account</h2>
           <ul className="space-y-2 text-sm">
@@ -42,6 +46,7 @@ const Footer = () => {
           </ul>
         </div>
 
+        {/* Support */}
         <div>
           <h2 className="font-bold mb-4">Support</h2>
           <ul className="space-y-2 text-sm">
@@ -56,6 +61,7 @@ const Footer = () => {
           </ul>
         </div>
 
+        {/* Company */}
         <div>
           <h2 className="font-bold mb-4">Company</h2>
           <ul className="space-y-2 text-sm">
@@ -69,6 +75,7 @@ const Footer = () => {
           </ul>
         </div>
 
+        {/* Quick Links */}
         <div>
           <h2 className="font-bold mb-4">Quick links</h2>
           <ul className="space-y-2 text-sm">
@@ -83,6 +90,7 @@ const Footer = () => {
         </div>
       </div>
 
+      {/* Bottom Statement */}
       <div className="max-w-7xl mx-auto mt-8 text-xs text-gray-500">
         <p>This clone website is created for educational purposes only and is not affiliated with Zerodha Broking Ltd. Just to learn developing a project:)</p>
       </div>

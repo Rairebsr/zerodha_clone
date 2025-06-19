@@ -37,7 +37,7 @@ const NavBar = () => {
                 <img onClick={()=>setOpen(!open)} className='w-6 h-6 cursor-pointer' src={assets.drop_icon} alt="" />
                 {open && (
                     <div className='absolute top-10 right-0 w-[28rem] bg-white shadow-xl border rounded-lg z-50 p-4 space-y-4'>
-                    {/* top section - horizontal arrangement without scrolling */}
+                        {/* top section */}
                     <div className="flex flex-wrap justify-between gap-4">
                         {features.map((item, index) => (
                             <div key={index} className="flex flex-col items-center text-center w-[6.5rem]">
