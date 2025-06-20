@@ -1,14 +1,14 @@
 import React from "react";
-import TeamMember from "@/components/TeamMember.jsx";
-
+import TeamMember from "../components/TeamMember";
 import Nithin from "@/assets/ceo_nithin-kamath.jpg";
 import Nikhil from "@/assets/co-founder_Nikhil.jpg";
 import Kailash from "@/assets/CTO_Kailash.jpg";
 import Venu from "@/assets/COO_Venu.jpg";
 import Hanan from "@/assets/CCO_Hanan.jpg";
-import Karthik from "@/assets/chief_of_education_karthik.jpg";
+import Karthik from "@/assets/cheif_of_education_karthik.jpg";
 import Austin from "@/assets/deirector_strategy_Austin.jpg";
 import Seema from "@/assets/Director_Seema.jpg";
+
 
 const About = () => {
   return (

@@ -67,7 +67,7 @@ const Supports = () => {
       <h3 className="flex items-center text-lg font-semibold mb-3">
         <span className="mr-2 text-xl"><i className="fi fi-rr-add"></i></span> Account Opening
       </h3>
-      <ul className="text-blue-600 space-y-1 text-sm">
+      <ul className="text-blue-600 space-y-1  text-sm">
         <li><a href="#">Resident individual</a></li>
         <li><a href="#">Minor</a></li>
         <li><a href="#">Non Resident Indian (NRI)</a></li>
