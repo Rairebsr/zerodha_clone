@@ -7,6 +7,8 @@ import Pricing from './pages/Pricing';
 import Supports from './pages/Supports';
 import NavBar from './components/NavBar';
 import Footer from './components/Footer';
+import BrokerageCalculator from './components/BrokerageCalculator';
+
 
 const App = () => {
   const location = useLocation();
@@ -30,6 +32,7 @@ const App = () => {
           <Route path='/products' element={<Products />} />
           <Route path='/pricing' element={<Pricing />} />
           <Route path='/support' element={<Supports />} />
+          <Route path="/brokerage-calculator" element={<BrokerageCalculator />} />
         </Routes>
       </div>
 
