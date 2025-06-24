@@ -57,3 +57,26 @@ export const universeItems = [
   }
 ]
 
+export const faqData = [
+  {
+    question: "What is a Zerodha account?",
+    answer: "A Zerodha account is a combined demat and trading account that allows investors to buy, sell, and hold securities digitally.",
+  },
+  {
+    question: "What documents are required to open a demat account?",
+    answer: "The following documents are required to open a Zerodha account online:\n• PAN number\n• Aadhaar Card (Linked with a phone number for OTP verification)\n• Cancelled cheque or bank account statement (To link your bank account)\n• Income proof (Required only if you wish to trade in Futures & options)",
+  },
+  {
+    question: "Is Zerodha account opening free?",
+    answer: "Yes, It is completely free.",
+  },
+  {
+    question: "Are there any maintenance charges for a demat account?",
+    answer: "The account maintaince charges is appliacable based on the account type.\n For Basic Services Demat Account: Zero charges if the holding value is less than ₹4,00,000.\n For non-Basic Services Demat Account demat accounts: ₹300 per year + GST.\n To learn more about BSDA, Click here.",
+  },
+  {
+    question: "Can I open a demat account without a bank account?",
+    answer: "To open a demat account, you must have a bank account in your name.\n If UPI verification is completed successfully, no proof of bank is needed.\n However, if bank verification fails, you'll need to provide either a cancelled cheque or a bank statement to link your bank account to Zerodha.",
+  },
+];
+

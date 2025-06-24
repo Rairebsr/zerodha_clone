@@ -136,7 +136,7 @@ const Supports = () => {
     {/* 6. Coin */}
     <div>
       <h3 className="flex items-center text-lg font-semibold mb-3">
-        <span className="mr-2 text-xl"><i className="fi fi-ts-usd-circle"></i></span> Coin
+        <span className="mr-2 text-xl"><i className="fi fi-sr-coin"></i></span> Coin
       </h3>
       <ul className="text-blue-600 space-y-1 text-sm">
         <li><a href="#">Mutual funds</a></li>

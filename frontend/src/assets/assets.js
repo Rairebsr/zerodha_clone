@@ -26,6 +26,14 @@ import streak from './streak-logo.png'
 import tijori from './tijori.svg'
 import zerodha from './zerodhafundhouse.png'
 import search from './search.png'
+import sign1 from './signin_land1.svg'
+import benefit from './acop-benefits.svg'
+import ipo from './ipo-acop.svg'
+import mf from './mf-acop.svg'
+import fo from './fo-acop.svg'
+import stock from './stocks-acop.svg'
+import step from './steps-acop.svg'
+
 
 
 export const assets = {
@@ -56,5 +64,12 @@ export const assets = {
     streak,
     tijori,
     zerodha,
-    search
+    search,
+    sign1,
+    benefit,
+    ipo,
+    mf,
+    fo,
+    stock,
+    step
 }

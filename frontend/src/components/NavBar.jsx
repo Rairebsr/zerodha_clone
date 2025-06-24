@@ -13,7 +13,7 @@ const NavBar = () => {
         <Link to='/'><img src={assets.logo} className='w-40' alt='logo'/></Link>
         
         <ul className='hidden sm:flex gap-10 text-m text-gray-700'>
-            <NavLink to='/signup' className='flex flex-col items-center gap-1 hover:text-gray-900 transition-all duration-300'>
+            <NavLink to='/signin' className='flex flex-col items-center gap-1 hover:text-gray-900 transition-all duration-300'>
                 <p>SignUp</p>
                 <hr className='w-2/2 border-none h-[1.5px] bg-gray-700 hidden'/>
             </NavLink>
