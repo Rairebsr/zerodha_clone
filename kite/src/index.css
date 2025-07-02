@@ -1,0 +1,11 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+a.active hr{
+    display :block;
+}
+a.active {
+    color: rgb(219, 119, 32);
+    font-weight: 600;
+}

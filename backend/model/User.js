@@ -13,6 +13,7 @@ const userSchema = new mongoose.Schema({
     webcam: { type: Boolean, default: false },
     
   },
+  totpSecret: { type: String, default: '' },
   createdAt: { type: Date, default: Date.now },
 });
 

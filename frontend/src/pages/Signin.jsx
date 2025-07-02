@@ -10,6 +10,7 @@ import globe from '../assets/globe.png';
 import axios from 'axios';
 import { useAuth } from '../context/Authentication';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 
 
@@ -87,22 +88,22 @@ const Signin = () => {
                 <button
                     onClick={async () => {
                         try {
-                            await axios.post('http://localhost:4000/api/auth/send-otp', { phone })
-                                
-                                .then((res) => {
-                                    console.log(res.data)
-                                    setShowOtpModal(true);
-                                    setGeneratedOtp(res.data.otp);
-                                    console.log(res.data.otp);
-                                })
-                                .catch((error) => {
-                                    console.error('Error sending OTP:', error);
-                                    alert('Failed to send OTP');
-                            });
+                        const res = await axios.post('http://localhost:4000/api/auth/send-otp', { phone });
+                        const data = res.data;
+
+                        if (data.alreadyExists) {
+                            toast.error('User already exists with this phone number. Please log in. via kite');
+                            // Optionally redirect or show login option here
+                            return;
+                        }
+
+                        setShowOtpModal(true);
+                        setGeneratedOtp(data.otp);
+                        console.log(data.otp);
 
                         } catch (error) {
-                            console.error('Error sending OTP:', error);
-                            alert('Failed to send OTP');
+                        console.error('Error sending OTP:', error);
+                        alert('Failed to send OTP');
                         }
                     }}
                     disabled={phone.length !== 10}
@@ -114,6 +115,7 @@ const Signin = () => {
                     >
                     Get OTP
                 </button>
+
 
 
                 {showOtpModal && (

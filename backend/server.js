@@ -4,6 +4,8 @@ import 'dotenv/config'
 import connectDb from './config/mongodb.js'
 import userRouter from './routes/auth.js'
 import stepRouter from './routes/steps.js'
+import listRouter from './routes/watchlist.js'
+import orderRouter from './routes/order.js'
 
 //App config
 const app = express()
@@ -17,8 +19,9 @@ app.use(cors()) //to access backend from any id
 
 //API routes
 app.use('/api/auth', userRouter)
-app.use('/api/steps', stepRouter) 
-
+app.use('/api/steps', stepRouter)
+app.use('/api/watchlist',listRouter)
+app.use('/api/order',orderRouter)
 
 app.get('/',(req,res)=>{
     res.send("API working")

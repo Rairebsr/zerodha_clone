@@ -16,21 +16,24 @@ import Aadhaar from './signup/Aadhaar';
 import Profile from './signup/Profile';
 import Bank from './signup/Bank';
 import WebcamVerification from './signup/WebcamVerification';
+import {ToastContainer} from 'react-toastify';
 
 
 const App = () => {
   const location = useLocation();
 
-  // Set which paths should be full-width
   const fullWidthRoutes = ['/support'];
-
-  // Check if current path is in full-width list
   const isFullWidth = fullWidthRoutes.includes(location.pathname);
+
+  const hideLayoutRoutes = ['/pan', '/finalize', '/aadhaar', '/profile', '/bank', '/webcam'];
+  const shouldHideLayout = hideLayoutRoutes.includes(location.pathname);
+
 
   return (
     <div>
+      <ToastContainer/>
       {/* Always full-width */}
-      <NavBar />
+      {!shouldHideLayout && <NavBar />}
 
       {/* Conditionally padded main content */}
       <div className={isFullWidth ? '' : 'px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw]'}>
@@ -79,7 +82,7 @@ const App = () => {
       </div>
 
       {/* Always full-width */}
-      <Footer />
+      {!shouldHideLayout && <Footer />}
     </div>
   );
 };
