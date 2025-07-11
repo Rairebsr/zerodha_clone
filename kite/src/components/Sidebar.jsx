@@ -37,23 +37,34 @@ const Sidebar = () => {
   
 }, []);
 
+  const [holdings, setHoldings] = useState([]);
   const [selectedWatchlist, setSelectedWatchlist] = useState('Watchlist 1');
   const [selectedGroup, setSelectedGroup] = useState('Default');
   const [currentPage, setCurrentPage] = useState(1);
-  const [showDepth, setShowDepth] = useState(false);
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [stockToDelete, setStockToDelete] = useState(null);
   const [newGroupName, setNewGroupName] = useState('');
   const [newWatchlist, setNewWatchlist] = useState('');
   const [showGroupInput, setShowGroupInput] = useState(false);
   const [addingType, setAddingType] = useState('');
-  const [showChartModal, setShowChartModal] = useState(false);
   const [selectedChartStock, setSelectedChartStock] = useState(null);
   const [state,setState] = useState('')
 
-  const {showBuyModal, setShowBuyModal} = useContext(userContext)
+  const {showBuyModal, setShowBuyModal,showChartModal,setShowChartModal,showDepth,setShowDepth} = useContext(userContext)
   
 
+useEffect(() => {
+    if (userId) fetchHoldings();
+  }, [userId]);
+
+  const fetchHoldings = async () => {
+    try {
+      const res = await axios.get(`http://localhost:4000/api/order/getorder/${userId}`);
+      setHoldings(res.data);
+    } catch (error) {
+      console.error("Error fetching holdings:", error);
+    }
+  };
 
 
 
@@ -175,6 +186,8 @@ const currentWatchlist = watchlists[selectedWatchlist] || { groups: {} };
 };
 
 const handleOrderClick = (stock, action) => {
+  
+  
   setSelectedChartStock(stock);
   setState(action);
   setShowBuyModal(true); // Open modal after setting everything
@@ -508,9 +521,10 @@ useEffect(() => {
         </div>
       )}
       
-      {showBuyModal && (
+      {showBuyModal && selectedChartStock&& (
           <div className='fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40 backdrop-blur-sm'>
-            <OrderModal closeModal={() => setShowBuyModal(false)} stock={selectedChartStock} st = {state}  />
+            
+            <OrderModal closeModal={() => {setShowBuyModal(false); fetchHoldings()}} stock={selectedChartStock} st = {state} userHoldings={holdings}  />
           </div>
       )}
       {showChartModal && (

@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { jwtDecode } from 'jwt-decode';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
-const OrderModal = ({ closeModal,stock,st }) => {
+const OrderModal = ({ closeModal,stock,st,userHoldings }) => {
   const [activeTab, setActiveTab] = useState('Regular');
   const [showAdvanced, setShowAdvanced] = useState(false);
 
@@ -25,6 +26,12 @@ const OrderModal = ({ closeModal,stock,st }) => {
 const decoded = token ? jwtDecode(token) : null;
 const userId = decoded?.id;
 
+
+useEffect(()=>{
+  console.log(stock);
+  
+},[stock])
+
 const handleBuyOrder = async () => {
   const orderData = {
     userId,
@@ -38,20 +45,28 @@ const handleBuyOrder = async () => {
     tabType: activeTab,
     validity: document.querySelector('input[name="validity"]:checked')?.nextSibling?.textContent?.trim() || 'Day',
     disclosedQty,
+    val: isBuy ? 'Buy' : 'Sell',
     timestamp: new Date().toISOString(),
   };
 
   try {
-    await axios.post('http://localhost:4000/api/order/addorder', orderData, {
+    const res = await axios.post('http://localhost:4000/api/order/addorder', orderData, {
       headers: {
         'Content-Type': 'application/json',
       },
     });
+    toast.success(res.data.message || "Order placed");
     closeModal();
   } catch (err) {
+    toast.error(msg);
     console.error('Order failed', err);
   }
 };
+
+const stockOwned = st === 'S' && userHoldings?.some(
+  (item) => item.stockSymbol === stock.symbol && item.quantity > 0
+);
+
 
 
 
@@ -201,11 +216,13 @@ const handleBuyOrder = async () => {
 
       <div className="flex gap-4 mt-4">
       <button
-        className={`flex-1 ${bgColor} text-white py-2 rounded ${hoverBgColor}`}
-        onClick={handleBuyOrder}
-      >
-        {isBuy ? 'Buy' : 'Sell'}
-      </button>
+      className={`flex-1 ${bgColor} text-white py-2 rounded ${hoverBgColor}`}
+      onClick={handleBuyOrder}
+      disabled={!isBuy && !stockOwned} // prevent selling if not owned
+    >
+      {isBuy ? 'Buy' : 'Sell'}
+    </button>
+
 
         <button onClick={closeModal} className="flex-1 border border-gray-300 py-2 rounded hover:bg-gray-100">Cancel</button>
       </div>
