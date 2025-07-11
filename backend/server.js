@@ -6,6 +6,7 @@ import userRouter from './routes/auth.js'
 import stepRouter from './routes/steps.js'
 import listRouter from './routes/watchlist.js'
 import orderRouter from './routes/order.js'
+import gttrouter from './routes/gtt.js'
 
 //App config
 const app = express()
@@ -22,6 +23,7 @@ app.use('/api/auth', userRouter)
 app.use('/api/steps', stepRouter)
 app.use('/api/watchlist',listRouter)
 app.use('/api/order',orderRouter)
+app.use('/api/gtt',gttrouter)
 
 app.get('/',(req,res)=>{
     res.send("API working")
