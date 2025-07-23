@@ -15,7 +15,10 @@ const GTTModal = ({ stock, closeModal }) => {
   const [userId, setUserId] = useState('');
   const [holdings, setHoldings] = useState([]);
 
-  
+  useEffect(()=>{
+    console.log(stock);
+    
+  })
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -32,7 +35,7 @@ const GTTModal = ({ stock, closeModal }) => {
     try {
       const res = await axios.get(`http://localhost:4000/api/order/getorder/${userId}`);
       setHoldings(res.data);
-      console.log(res.data);
+     
       
     } catch (error) {
       console.error("Error fetching holdings:", error);
@@ -100,7 +103,7 @@ const handlePlaceOrder = async () => {
         </button>
 
         <div className="mb-4">
-          <h2 className="text-xl font-semibold">{stock.stockName} <span className="text-sm text-black-400 ml-1">{stock.stockSymbol}</span></h2>
+          <h2 className="text-xl font-semibold">{stock.name} <span className="text-sm text-black-400 ml-1">{stock.symbol}</span></h2>
           <p className="text-sm text-gray-500">LTP: ₹{stock.price}</p>
         </div>
 

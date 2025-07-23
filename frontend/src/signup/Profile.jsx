@@ -6,6 +6,9 @@ import axios from 'axios';
 
 
 const Profile = () => {
+    const [fatherName, setFatherName] = useState('');
+    const [motherName, setMotherName] = useState('');
+
     const [maritalStatus, setMaritalStatus] = useState('');
     const [income, setIncome] = useState('');
     const [experience, setExperience] = useState('');
@@ -20,7 +23,11 @@ const Profile = () => {
         try {
         const res = await axios.post(
             'http://localhost:4000/api/steps/profile',
-            {  },
+            {
+  fatherName, motherName, maritalStatus, income,
+  experience, occupation, settlementPref, pepStatus
+}
+,
             {
             headers: {
                 Authorization: token,
@@ -51,12 +58,18 @@ const Profile = () => {
           type="text"
           placeholder="Father's Name"
           className="w-full px-4 py-2 border rounded-md placeholder:font-medium"
+          value={fatherName}
+          onChange={(e) => setFatherName(e.target.value)}
         />
+
         <input
           type="text"
           placeholder="Mother's Name"
           className="w-full px-4 py-2 border rounded-md placeholder:font-medium"
+          value={motherName}
+          onChange={(e) => setMotherName(e.target.value)}
         />
+
       </div>
 
       <hr className="my-6" />
@@ -205,13 +218,16 @@ const Profile = () => {
         <button
           onClick={handleContinue}
           disabled={
-            !maritalStatus ||
-            !income ||
-            !experience ||
-            !occupation ||
-            !settlementPref ||
-            !pepStatus
-          }
+        !fatherName ||
+        !motherName ||
+        !maritalStatus ||
+        !income ||
+        !experience ||
+        !occupation ||
+        !settlementPref ||
+        !pepStatus
+      }
+
           className={`w-full max-w-xs px-6 py-2 rounded-md text-white font-medium transition ${
             !maritalStatus ||
             !income ||

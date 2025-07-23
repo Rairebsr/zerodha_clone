@@ -20,7 +20,10 @@ const Bank = () => {
           try {
             const res = await axios.post(
               'http://localhost:4000/api/steps/bank',
-              { },
+              {
+  ifsc, micr, accountNo, bankName, branch
+}
+,
               {
                 headers: {
                   Authorization: token,

@@ -1,5 +1,5 @@
 import Orders from "../model/Orders.js";
-
+import Fund from "../model/Fund.js"; // import the fund model
 
 export const addOrder = async (req, res) => {
   try {
@@ -16,30 +16,73 @@ export const addOrder = async (req, res) => {
       validity,
       disclosedQty,
       timestamp,
+      segment,
+      exchange
     } = req.body;
+
     const quantity = parseInt(rawQty);
     const isBuy = req.body?.val !== 'Sell';
-    const existingOrder = await Orders.findOne({ userId, stockSymbol });
 
-    // === BUY ===
-    if (isBuy) {
-      if (existingOrder) {
-        // update quantity and optionally average price
-        existingOrder.quantity += quantity;
-        existingOrder.price = price; // or weighted avg?
-        await existingOrder.save();
-        return res.status(200).json({ message: 'Buy order updated' });
-      } else {
-        const newOrder = new Orders(req.body);
-        await newOrder.save();
-        return res.status(201).json({ message: 'Buy order placed' });
-      }
+    // Find or create fund for user
+    let fund = await Fund.findOne({ userId });
+    if (!fund) {
+      fund = new Fund({ userId });
     }
 
-    // === SELL ===
-    if (!isBuy) {
+    // Validate segment (equity or commodity)
+    if (!['EQUITY', 'COMMODITY'].includes(segment)) {
+      return res.status(400).json({ message: 'Invalid segment' });
+    }
+
+    const fundSegment = fund[segment.toLowerCase()];
+    const totalPrice = price * quantity;
+
+    // === BUY ORDER ===
+    if (isBuy) {
+      if (fundSegment.availableMargin < totalPrice) {
+        return res.status(400).json({ message: 'Insufficient margin' });
+      }
+
+      // Deduct from availableMargin and update usedMargin
+      fundSegment.availableMargin -= totalPrice;
+      fundSegment.usedMargin += totalPrice;
+
+      const existingOrder = await Orders.findOne({ userId, stockSymbol, segment, exchange });
+
+      if (existingOrder) {
+        existingOrder.quantity += quantity;
+        existingOrder.price = price; // you may average this
+        await existingOrder.save();
+      } else {
+        const newOrder = new Orders({
+          userId,
+          stockSymbol,
+          stockName,
+          price,
+          quantity,
+          stopLoss,
+          orderType,
+          productType,
+          tabType,
+          validity,
+          disclosedQty,
+          timestamp,
+          segment,
+          exchange
+        });
+        await newOrder.save();
+      }
+
+      await fund.save();
+      return res.status(200).json({ message: 'Buy order processed' });
+    }
+
+    // === SELL ORDER ===
+    else {
+      const existingOrder = await Orders.findOne({ userId, stockSymbol, segment, exchange });
+
       if (!existingOrder) {
-        return res.status(400).json({ message: 'You do not own this stock' });
+        return res.status(400).json({ message: 'You do not own this stock in this segment' });
       }
 
       if (existingOrder.quantity < quantity) {
@@ -48,13 +91,18 @@ export const addOrder = async (req, res) => {
 
       existingOrder.quantity -= quantity;
 
+      // Credit margin back
+      fundSegment.availableMargin += totalPrice;
+      fundSegment.usedMargin = Math.max(0, fundSegment.usedMargin - totalPrice); // avoid negative
+
       if (existingOrder.quantity === 0) {
         await Orders.deleteOne({ _id: existingOrder._id });
-        return res.status(200).json({ message: 'Sold entire quantity, record deleted' });
       } else {
         await existingOrder.save();
-        return res.status(200).json({ message: 'Sell order processed' });
       }
+
+      await fund.save();
+      return res.status(200).json({ message: 'Sell order processed' });
     }
 
   } catch (err) {
@@ -84,3 +132,6 @@ export const getposition = async (req, res) => {
   }
  
 };
+
+
+

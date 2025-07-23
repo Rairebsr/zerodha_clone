@@ -165,3 +165,20 @@ export const verifytotp = async (req, res) => {
 };
 
 
+export const profile= async (req, res) => {
+  const userId = req.userId;
+  const user = await User.findById(userId);
+  res.json(user);
+};
+
+
+export const updateprofile = async (req, res) => {
+  const userId = req.userId;
+  const { profileDetails, panDetails, bankDetails } = req.body;
+  await User.findByIdAndUpdate(userId, {
+    profileDetails, panDetails, bankDetails
+  });
+  res.sendStatus(200);
+};
+
+

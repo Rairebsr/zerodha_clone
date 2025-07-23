@@ -17,6 +17,8 @@ const Dashboard = () => {
   const [marginAvailable, setMarginAvailable] = useState(0);
   const [userId,setUserId] = useState('')
   const [showModal, setShowModal] = useState(false);
+  const [commodityValue, setCommodityValue] = useState(0);
+
 
   const {showBuyModal,showDepth,showChartModal} = useContext(userContext)
 
@@ -41,25 +43,42 @@ useEffect(() => {
   if (!userId) return; // Wait until userId is available
 
   const fetchOrders = async () => {
-    try {
-      const res = await fetch(`http://localhost:4000/api/order/getorder/${userId}`);
-      const orders = await res.json();
-      console.log("Fetched Orders:", orders);
+  try {
+    const res = await fetch(`http://localhost:4000/api/order/getorder/${userId}`);
+    const orders = await res.json();
+    console.log("Fetched Orders:", orders);
 
-      const equity = orders.reduce((acc, order) => {
-        if (order.tabType === "Regular" && order.productType === "Intraday") {
-          return acc + order.price * order.quantity;
-        }
-        return acc;
-      }, 0);
+    const equity = orders.reduce((acc, order) => {
+      if (
+        order.segment === 'EQUITY' &&
+        order.tabType === 'Regular' &&
+        order.productType === 'Intraday'
+      ) {
+        return acc + order.price * order.quantity;
+      }
+      return acc;
+    }, 0);
 
-      setEquityValue(equity);
-      setMarginAvailable(100000 - equity);
-      setStocks(orders);
-    } catch (error) {
-      console.error("Failed to fetch user orders:", error);
-    }
-  };
+    const commodity = orders.reduce((acc, order) => {
+      if (
+        order.segment === 'COMMODITY' &&
+        order.tabType === 'Regular' &&
+        order.productType === 'Intraday'
+      ) {
+        return acc + order.price * order.quantity;
+      }
+      return acc;
+    }, 0);
+
+    setEquityValue(equity);
+    setCommodityValue(commodity);
+    setMarginAvailable(100000 - (equity + commodity)); // Optional combined margin
+    setStocks(orders);
+  } catch (error) {
+    console.error("Failed to fetch user orders:", error);
+  }
+};
+
 
   fetchOrders();
 }, [userId]); 
@@ -81,7 +100,7 @@ useEffect(() => {
 
           <div className="bg-white p-4 rounded shadow">
             <h2 className="text-gray-500 text-sm">Commodity</h2>
-            <p className="text-xl font-semibold text-blue-600">₹0</p>
+            <p className="text-xl font-semibold text-yellow-600">₹{commodityValue.toFixed(2)}</p>
             <p className="text-xs text-gray-400">Margin used: ₹0</p>
             <p className="text-xs text-gray-400">Opening balance: ₹0</p>
           </div>

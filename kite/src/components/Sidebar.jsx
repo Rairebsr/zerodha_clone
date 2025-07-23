@@ -69,8 +69,9 @@ useEffect(() => {
 
 
   const filteredStocks = stockData.filter(stock =>
-    stock.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  stock.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+);
+
 
   const allWatchlistKeys = Object.keys(watchlists || {});
   const currentWatchlistName = selectedWatchlist;
@@ -147,26 +148,30 @@ const currentWatchlist = watchlists[selectedWatchlist] || { groups: {} };
 };
 
   const createNewGroup = () => {
-    const newGroup = newGroupName.trim() || `Group ${Object.keys(watchlists[selectedWatchlist].groups).length + 1}`;
-    setWatchlists(prev => {
-      const updated = { ...prev };
-      updated[selectedWatchlist].groups[newGroup] = [];
-      if (userId) syncWithServer(updated);
+  if (!watchlists[selectedWatchlist]) return;
 
-      return updated;
+  const groupList = watchlists[selectedWatchlist].groups || {};
+  const newGroup = newGroupName.trim() || `Group ${Object.keys(groupList).length + 1}`;
 
-    });
-      
-    setSelectedGroup(newGroup);
-    setNewGroupName('');
-    setNewWatchlist('');
-    setShowGroupInput(false);
-  };
+  setWatchlists(prev => {
+    const updated = { ...prev };
+    updated[selectedWatchlist].groups[newGroup] = [];
+    if (userId) syncWithServer(updated);
+    return updated;
+  });
+
+  setSelectedGroup(newGroup);
+  setNewGroupName('');
+  setNewWatchlist('');
+  setShowGroupInput(false);
+};
+
 
   const createNewWatchlist = () => {
   const name = newWatchlist.trim() || `Watchlist ${Object.keys(watchlists).length + 1}`;
+
   setWatchlists(prev => {
-    if (prev[name]) return prev;  // Already exists
+    if (prev[name]) return prev;
 
     const updated = {
       ...prev,
@@ -182,8 +187,13 @@ const currentWatchlist = watchlists[selectedWatchlist] || { groups: {} };
   setNewGroupName('');
   setNewWatchlist('');
   setShowGroupInput(false);
-  setCurrentPage(Object.keys(watchlists).length + 1);
+
+  // Only update after new list is created
+  setTimeout(() => {
+    setCurrentPage(Object.keys(watchlists).length + 1);
+  }, 100);
 };
+
 
 const handleOrderClick = (stock, action) => {
   

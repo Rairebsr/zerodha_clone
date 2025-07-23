@@ -22,8 +22,9 @@ const StockModal = ({ onClose }) => {
 
   
   const filteredStocks = stockData.filter(stock =>
-    stock.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  stock.name.toLowerCase().startsWith(searchTerm.toLowerCase())
+);
+
 
   const handleOrderClick = (action) => {
   setState(action);

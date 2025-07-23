@@ -13,6 +13,8 @@ const OrderModal = ({ closeModal,stock,st,userHoldings }) => {
   const stopLossTrigger = (stock?.price * 0.97).toFixed(2); 
   const disclosedQty = Math.floor(qty / 2);
   const estimatedCost = (qty * price).toFixed(2);
+  const [segment, setSegment] = useState('EQUITY');
+
 
   const isBuy = st === 'B';
   const primaryColor = isBuy ? 'blue' : 'orange';
@@ -47,6 +49,8 @@ const handleBuyOrder = async () => {
     disclosedQty,
     val: isBuy ? 'Buy' : 'Sell',
     timestamp: new Date().toISOString(),
+    segment: segment,
+    exchange: segment === 'EQUITY' ? 'NSE' : 'MCX',
   };
 
   try {
@@ -58,9 +62,11 @@ const handleBuyOrder = async () => {
     toast.success(res.data.message || "Order placed");
     closeModal();
   } catch (err) {
-    toast.error(msg);
-    console.error('Order failed', err);
-  }
+  const errorMsg = err?.response?.data?.message || 'Order failed';
+  toast.error(errorMsg);
+  console.error('Order failed', err);
+}
+
 };
 
 const stockOwned = st === 'S' && userHoldings?.some(
@@ -165,6 +171,35 @@ const stockOwned = st === 'S' && userHoldings?.some(
       </div>
 
       {renderTabs()}
+<div className="flex gap-4 mb-4">
+  <label className="flex items-center cursor-pointer">
+    <input
+      type="radio"
+      name="segment"
+      value="EQUITY"
+      checked={segment === 'EQUITY'}
+      onChange={() => setSegment('EQUITY')}
+      className="hidden peer"
+    />
+    <span className="px-3 py-1 rounded border border-gray-300 peer-checked:bg-green-600 peer-checked:text-white">
+      Equity
+    </span>
+  </label>
+
+  <label className="flex items-center cursor-pointer">
+    <input
+      type="radio"
+      name="segment"
+      value="COMMODITY"
+      checked={segment === 'COMMODITY'}
+      onChange={() => setSegment('COMMODITY')}
+      className="hidden peer"
+    />
+    <span className="px-3 py-1 rounded border border-gray-300 peer-checked:bg-yellow-500 peer-checked:text-white">
+      Commodity
+    </span>
+  </label>
+</div>
 
       <div className="flex gap-4 mb-4">
   <label className="flex items-center cursor-pointer">

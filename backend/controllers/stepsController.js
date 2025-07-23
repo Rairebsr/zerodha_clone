@@ -5,10 +5,11 @@ import bcrypt from 'bcryptjs'
 export const panStep = async (req, res) => {
   try {
     const user = await User.findById(req.userId);
+
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     
-
+    user.panDetails = { panNumber: req.body.pan, dob: req.body.dob };
     user.stepsCompleted.pan = true;
     await user.save();
 
@@ -24,7 +25,7 @@ export const aadhaarStep = async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     
-
+    user.aadhaarDetails = { aadhaarNumber: req.body.aadhaar };
     user.stepsCompleted.aadhaar = true;
     await user.save();
 
@@ -40,6 +41,7 @@ export const profileStep = async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     
+    user.profileDetails = req.body;
 
     user.stepsCompleted.profile = true;
     await user.save();
@@ -56,7 +58,7 @@ export const bankStep = async (req, res) => {
     if (!user) return res.status(404).json({ message: 'User not found' });
 
     
-
+    user.bankDetails = req.body;
     user.stepsCompleted.bank = true;
     await user.save();
 
