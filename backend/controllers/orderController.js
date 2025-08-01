@@ -235,6 +235,52 @@ export const placeAllOrders = async (req, res) => {
       return res.status(400).json({ message: 'Cart is empty' });
     }
 
+    const fund = await Fund.findOne({ userId });
+    if (!fund) {
+      return res.status(400).json({ message: 'No fund account found' });
+    }
+
+    // Step 1: Group orders by segment and calculate total cost
+    const segmentTotals = {};
+
+    for (const item of cart.items) {
+      if (item.val === 'Sell') continue; // Skip sell orders for fund check
+
+      const key = item.segment.toLowerCase();
+      const cost = item.price * item.quantity;
+
+      if (!segmentTotals[key]) {
+        segmentTotals[key] = 0;
+      }
+      segmentTotals[key] += cost;
+    }
+
+    // Step 2: Check if each segment has enough margin
+    for (const seg of Object.keys(segmentTotals)) {
+      const segFund = fund[seg];
+      if (!segFund || segFund.availableMargin < segmentTotals[seg]) {
+        return res.status(400).json({
+          message: `Insufficient margin for segment ${seg.toUpperCase()}`
+        });
+      }
+    }
+
+    // Step 3: Deduct funds and process each order
+    for (const item of cart.items) {
+      const segKey = item.segment.toLowerCase();
+      const cost = item.price * item.quantity;
+      const isBuy = item.val !== 'Sell';
+
+      if (isBuy) {
+        fund[segKey].availableMargin -= cost;
+        fund[segKey].usedMargin += cost;
+      } else {
+        // For sell, you can validate ownership similarly to addOrder if needed
+        fund[segKey].availableMargin += cost;
+        fund[segKey].usedMargin = Math.max(0, fund[segKey].usedMargin - cost);
+      }
+    }
+
     const orderDocs = cart.items.map((item) => ({
       userId,
       stockSymbol: item.symbol,
@@ -252,17 +298,18 @@ export const placeAllOrders = async (req, res) => {
       timestamp: new Date(),
     }));
 
-    await Orders.insertMany(orderDocs); // Insert all orders
-    cart.items = []; // Clear cart
+    await Orders.insertMany(orderDocs); // Place all orders
+    cart.items = [];
     await cart.save();
+    await fund.save(); // Save updated margins
 
     res.status(200).json({ message: 'Orders placed successfully' });
+
   } catch (error) {
     console.error('Error placing all orders:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 
 
 

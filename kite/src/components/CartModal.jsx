@@ -3,6 +3,7 @@ import { FaSearch, FaShoppingBasket,FaEllipsisV } from 'react-icons/fa';
 import stockData from '../assets/mock_stock_data_50.json';
 import { jwtDecode } from 'jwt-decode';
 import OrderModal from './OrderModel';
+import { toast } from 'react-toastify';
 
 const CartModal = ({ isOpen, onClose }) => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -316,9 +317,9 @@ useEffect(() => {
 
                 if (response.ok) {
                   setCartItems([]); // Clear cart state in UI
-                  console.log(result.message);
+                  toast.success(result.message)
                 } else {
-                  console.error(result.message);
+                  toast.error(result.message)
                 }
               } catch (err) {
                 console.error('Failed to place all orders:', err);
