@@ -1,5 +1,6 @@
 import Orders from "../model/Orders.js";
-import Fund from "../model/Fund.js"; // import the fund model
+import Fund from "../model/Fund.js";
+import Cart from "../model/Cart.js";
 
 export const addOrder = async (req, res) => {
   try {
@@ -132,6 +133,138 @@ export const getposition = async (req, res) => {
   }
  
 };
+
+export const setcart =  async (req, res) => {
+  const { userId, item } = req.body;
+
+  try {
+    const cart = await Cart.findOneAndUpdate(
+      { userId },
+      { $addToSet: { items: item } }, // prevent duplicates
+      { upsert: true, new: true }
+    );
+    res.status(200).json(cart);
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to add to cart' });
+  }
+};
+
+export const updatecart = async (req, res) => {
+  const { userId, itemId, updates } = req.body;
+
+  try {
+    const result = await Cart.findOneAndUpdate(
+      { userId, "items._id": itemId },
+      {
+        $set: Object.fromEntries(
+          Object.entries(updates).map(([k, v]) => [`items.$.${k}`, v])
+        )
+      },
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({ message: "Cart item not found" });
+    }
+
+    res.status(200).json({ message: "Item updated", result });
+  } catch (err) {
+    console.error("Error updating cart item:", err);
+    res.status(500).json({ message: "Failed to update cart", error: err.message });
+  }
+};
+
+
+export const getcart = async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const cart = await Cart.findOne({ userId });
+    res.status(200).json(cart || { cart: [] });
+  } catch (err) {
+    res.status(500).json({ error: 'Failed to fetch cart' });
+  }
+};
+
+// Example Express route
+export const cartremove = async (req, res) => {
+  const { userId, itemId } = req.body;
+
+  try {
+    const result = await Cart.updateOne(
+      { userId },
+      { $pull: { items: { _id: itemId } } }
+    );
+
+    res.status(200).json({ message: 'Item removed', result });
+  } catch (error) {
+    res.status(500).json({ message: 'Error removing item', error });
+  }
+};
+
+
+// clearcart.js (or inside your existing controller)
+export const clearCart = async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const result = await Cart.findOneAndUpdate(
+      { userId },
+      { $set: { items: [] } },
+      { new: true }
+    );
+
+    if (!result) {
+      return res.status(404).json({ message: "Cart not found" });
+    }
+
+    res.status(200).json({ message: "Cart cleared", result });
+  } catch (err) {
+    res.status(500).json({ message: "Failed to clear cart", error: err.message });
+  }
+};
+
+
+export const placeAllOrders = async (req, res) => {
+  const { userId } = req.body;
+
+  try {
+    const cart = await Cart.findOne({ userId });
+
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({ message: 'Cart is empty' });
+    }
+
+    const orderDocs = cart.items.map((item) => ({
+      userId,
+      stockSymbol: item.symbol,
+      stockName: item.name,
+      price: item.price,
+      quantity: item.quantity,
+      stopLoss: item.stopLoss,
+      orderType: item.orderType,
+      productType: item.productType,
+      tabType: item.tabType,
+      validity: item.validity,
+      disclosedQty: item.disclosedQty,
+      segment: item.segment,
+      exchange: item.exchange,
+      timestamp: new Date(),
+    }));
+
+    await Orders.insertMany(orderDocs); // Insert all orders
+    cart.items = []; // Clear cart
+    await cart.save();
+
+    res.status(200).json({ message: 'Orders placed successfully' });
+  } catch (error) {
+    console.error('Error placing all orders:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
 
 
 
